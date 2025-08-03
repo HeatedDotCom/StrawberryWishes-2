@@ -52,7 +52,7 @@
                 </div>
                 
                 <div class="mt-8">
-                    <a href="leaderboard.html" class="retro-btn retro-btn-accent">View Leaderboard</a>
+                    <button id="view-leaderboard-btn" class="retro-btn retro-btn-accent">View Leaderboard</button>
                 </div>
             </div>
         </div>
@@ -135,6 +135,44 @@
                 <div class="text-center">
                     <button id="new-game-btn" class="retro-btn retro-btn-primary">New Game</button>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaderboard Overlay -->
+    <div id="leaderboard-overlay" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="retro-card max-w-4xl mx-4 w-full max-h-[80vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="text-3xl font-bold text-blue-800">🏆 Basedness Leaderboard</h1>
+                <button id="close-leaderboard" class="retro-btn retro-btn-secondary">Close</button>
+            </div>
+            
+            <div class="mb-6">
+                <select id="field-filter" class="retro-input">
+                    <option value="all">All Fields</option>
+                    <option value="politics">Politics</option>
+                    <option value="philosophy">Philosophy</option>
+                    <option value="social">Social Issues</option>
+                    <option value="random">Random</option>
+                </select>
+            </div>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full border-collapse bg-white rounded-lg overflow-hidden shadow-lg">
+                    <thead class="bg-blue-600 text-white">
+                        <tr>
+                            <th class="px-6 py-4 text-left font-semibold">Rank</th>
+                            <th class="px-6 py-4 text-left font-semibold">Player</th>
+                            <th class="px-6 py-4 text-left font-semibold">Field</th>
+                            <th class="px-6 py-4 text-center font-semibold">Total Score</th>
+                            <th class="px-6 py-4 text-center font-semibold">Basedness</th>
+                            <th class="px-6 py-4 text-center font-semibold">Games</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leaderboard-list">
+                        <!-- Leaderboard items will be populated here -->
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
