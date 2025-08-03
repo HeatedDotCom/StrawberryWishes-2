@@ -1,4 +1,3 @@
-
 import { supabase } from './supabase.js';
 import { db } from './db.js';
 import { Utils } from './utils.js';
@@ -14,7 +13,7 @@ class HeatedDotCom {
         this.takes = [];
         this.votes = [];
         this.players = [];
-        
+
         this.initializeApp();
     }
 
@@ -58,7 +57,7 @@ class HeatedDotCom {
         document.getElementById('password').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') this.handleLogin();
         });
-        
+
         document.getElementById('room-code').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') this.joinRoom();
         });
@@ -93,20 +92,31 @@ class HeatedDotCom {
         const password = document.getElementById('password').value;
 
         if (!email || !password) {
-            Utils.showNotification('Please enter email and password', 'error');
+            Utils.showNotification('Please fill in both fields', 'error');
             return;
         }
 
         try {
             const result = await supabase.signUp(email, password);
-            if (result.user) {
-                Utils.showNotification('Account created! Please check your email.', 'success');
+            if (result.error) {
+                Utils.showNotification(result.error.message, 'error');
             } else {
-                Utils.showNotification('Signup failed', 'error');
+                this.showEmailOverlay();
+                // Clear form
+                document.getElementById('email').value = '';
+                document.getElementById('password').value = '';
             }
         } catch (error) {
-            Utils.showNotification('Signup error: ' + error.message, 'error');
+            Utils.showNotification('Signup failed', 'error');
         }
+    }
+
+    showEmailOverlay() {
+        document.getElementById('email-overlay').classList.remove('hidden');
+    }
+
+    closeEmailOverlay() {
+        document.getElementById('email-overlay').classList.add('hidden');
     }
 
     async handleAnonymousLogin() {
@@ -147,7 +157,7 @@ class HeatedDotCom {
         }
 
         const topicField = document.getElementById('topic-field').value;
-        
+
         try {
             const roomCode = await db.createRoom(this.currentUser.id, topicField);
             await this.joinRoomByCode(roomCode);
@@ -178,7 +188,7 @@ class HeatedDotCom {
                 this.currentUser.id, 
                 this.currentUser.username || this.currentUser.email || 'Anonymous'
             );
-            
+
             this.currentRoom = room;
             this.showPage('lobby');
             document.getElementById('current-room-code').textContent = roomCode;
@@ -249,11 +259,11 @@ class HeatedDotCom {
         let countdown = 5;
         const timerEl = document.getElementById('start-timer');
         timerEl.classList.remove('hidden');
-        
+
         const interval = setInterval(() => {
             timerEl.textContent = `Game starting in ${countdown}...`;
             countdown--;
-            
+
             if (countdown < 0) {
                 clearInterval(interval);
                 this.startGame();
@@ -282,7 +292,7 @@ class HeatedDotCom {
         try {
             await db.updateRoomStatus(this.currentRoom.code, 'playing');
             const wordData = await Utils.generateWord(this.currentRoom.topic_field);
-            
+
             this.currentRound = await db.startRound(
                 this.currentRoom.code,
                 wordData.word,
@@ -301,9 +311,9 @@ class HeatedDotCom {
         document.getElementById('current-word').textContent = wordData.word;
         document.getElementById('word-type').textContent = wordData.type;
         document.getElementById('word-definition').textContent = wordData.definition;
-        
+
         this.showPhase('word-phase');
-        
+
         setTimeout(() => {
             this.startWritingPhase();
         }, 5000);
@@ -317,11 +327,11 @@ class HeatedDotCom {
     startWritingTimer() {
         let timeLeft = 60;
         const timerEl = document.getElementById('writing-timer');
-        
+
         this.timer = setInterval(() => {
             timerEl.textContent = timeLeft;
             timeLeft--;
-            
+
             if (timeLeft < 0) {
                 clearInterval(this.timer);
                 this.submitTake(true); // Force submit
@@ -331,7 +341,7 @@ class HeatedDotCom {
 
     async submitTake(forced = false) {
         const takeText = document.getElementById('take-input').value.trim();
-        
+
         if (!takeText && !forced) {
             Utils.showNotification('Please write your take', 'error');
             return;
@@ -348,7 +358,7 @@ class HeatedDotCom {
             clearInterval(this.timer);
             document.getElementById('submit-take-btn').disabled = true;
             Utils.showNotification('Take submitted!', 'success');
-            
+
             // Check if all players have submitted
             setTimeout(() => this.checkAllTakesSubmitted(), 1000);
         } catch (error) {
@@ -383,7 +393,7 @@ class HeatedDotCom {
 
         const currentTake = this.takes[this.currentTakeIndex];
         const isOwnTake = currentTake.player_id === this.currentUser.id;
-        
+
         document.getElementById('take-text').textContent = currentTake.take_text;
         document.getElementById('voting-progress').textContent = 
             `Take ${this.currentTakeIndex + 1} of ${this.takes.length}`;
@@ -403,7 +413,7 @@ class HeatedDotCom {
 
     async submitVote(voteType) {
         const currentTake = this.takes[this.currentTakeIndex];
-        
+
         try {
             await db.submitVote(
                 this.currentRoom.code,
@@ -427,7 +437,7 @@ class HeatedDotCom {
 
     async showResults() {
         this.showPhase('results-phase');
-        
+
         try {
             const votes = await db.getRoundVotes(this.currentRoom.code, this.currentRound.round_number);
             const results = this.calculateResults(votes);
@@ -440,11 +450,11 @@ class HeatedDotCom {
 
     calculateResults(votes) {
         const results = {};
-        
+
         this.takes.forEach(take => {
             const takeVotes = votes.filter(v => v.take_id === take.id);
             const score = takeVotes.reduce((sum, vote) => sum + Utils.calculateScore(vote.vote_type), 0);
-            
+
             results[take.player_id] = results[take.player_id] || { score: 0, takes: [] };
             results[take.player_id].score += score;
             results[take.player_id].takes.push({
@@ -464,7 +474,7 @@ class HeatedDotCom {
         Object.entries(results).forEach(([playerId, data]) => {
             const player = this.players.find(p => p.player_id === playerId);
             const isCurrentUser = playerId === this.currentUser.id;
-            
+
             const resultDiv = document.createElement('div');
             resultDiv.className = `take-result ${isCurrentUser ? 'own-take' : ''}`;
             resultDiv.innerHTML = `

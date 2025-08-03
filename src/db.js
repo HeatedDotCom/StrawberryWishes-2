@@ -152,6 +152,20 @@ export class Database {
             `room_code=eq.${roomCode}&player_id=eq.${playerId}`
         );
     }
+
+    async getAvailableRooms() {
+        const rooms = await supabase.select('rooms', 'status=eq.lobby');
+        const availableRooms = [];
+        
+        for (const room of rooms) {
+            const players = await this.getRoomPlayers(room.code);
+            if (players.length < 8) { // Assuming max 8 players per room
+                availableRooms.push(room);
+            }
+        }
+        
+        return availableRooms;
+    }
 }
 
 export const db = new Database();
