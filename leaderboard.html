@@ -1,0 +1,38 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard - HeatedDotCom</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="public/style.css">
+</head>
+<body class="bg-gradient-to-br from-blue-100 to-blue-200 min-h-screen font-segoe">
+    <div class="container mx-auto px-4 py-8 max-w-4xl">
+        <div class="retro-card">
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="text-3xl font-bold text-blue-800">🏆 Basedness Leaderboard</h1>
+                <a href="index.html" class="retro-btn retro-btn-secondary">Back to Game</a>
+            </div>
+            
+            <div class="mb-6">
+                <select id="field-filter" class="retro-input">
+                    <option value="all">All Fields</option>
+                    <option value="politics">Politics</option>
+                    <option value="philosophy">Philosophy</option>
+                    <option value="social">Social Issues</option>
+                    <option value="random">Random</option>
+                </select>
+            </div>
+            
+            <div id="leaderboard-list" class="space-y-4">
+                <!-- Leaderboard items will be populated here -->
+            </div>
+        </div>
+    </div>
+    
+    <script type="module" src="src/leaderboard.js"></script>
+</body>
+</html>

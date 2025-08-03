@@ -1,13 +1,142 @@
-<!doctype html>
+
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>React + TypeScript + Replit</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/index.jsx"></script>
-  </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HeatedDotCom - Debate Game</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="public/style.css">
+</head>
+<body class="bg-gradient-to-br from-blue-100 to-blue-200 min-h-screen font-segoe">
+    <div id="app" class="container mx-auto px-4 py-8 max-w-4xl">
+        <!-- Homepage -->
+        <div id="homepage" class="page">
+            <div class="retro-card text-center mb-8">
+                <h1 class="text-4xl font-bold text-blue-800 mb-4">🔥 HeatedDotCom</h1>
+                <p class="text-lg text-gray-700 mb-6">Real-time blind voting debate game</p>
+                
+                <div class="space-y-4 max-w-md mx-auto">
+                    <div id="auth-section">
+                        <div id="login-form" class="space-y-3">
+                            <input type="email" id="email" placeholder="Email" class="retro-input w-full">
+                            <input type="password" id="password" placeholder="Password" class="retro-input w-full">
+                            <div class="flex gap-2">
+                                <button id="login-btn" class="retro-btn retro-btn-primary flex-1">Login</button>
+                                <button id="signup-btn" class="retro-btn retro-btn-secondary flex-1">Sign Up</button>
+                            </div>
+                            <button id="anon-btn" class="retro-btn retro-btn-accent w-full">Play Anonymous</button>
+                        </div>
+                        <div id="user-info" class="hidden">
+                            <p class="text-lg mb-4">Welcome, <span id="username"></span>!</p>
+                            <button id="logout-btn" class="retro-btn retro-btn-secondary">Logout</button>
+                        </div>
+                    </div>
+                    
+                    <div id="game-controls" class="space-y-3">
+                        <select id="topic-field" class="retro-input w-full">
+                            <option value="politics">Politics</option>
+                            <option value="philosophy">Philosophy</option>
+                            <option value="social">Social Issues</option>
+                            <option value="random">Random</option>
+                        </select>
+                        <button id="create-room-btn" class="retro-btn retro-btn-primary w-full">Create Room</button>
+                        <div class="flex gap-2">
+                            <input type="text" id="room-code" placeholder="Room Code" class="retro-input flex-1">
+                            <button id="join-room-btn" class="retro-btn retro-btn-primary">Join</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-8">
+                    <a href="leaderboard.html" class="retro-btn retro-btn-accent">View Leaderboard</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Lobby -->
+        <div id="lobby" class="page hidden">
+            <div class="retro-card">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-blue-800">Game Lobby</h2>
+                    <div class="text-sm text-gray-600">
+                        Room: <span id="current-room-code" class="font-mono bg-gray-200 px-2 py-1 rounded"></span>
+                        <button id="copy-room-code" class="ml-2 retro-btn retro-btn-small">Copy</button>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
+                    <div id="players-list"></div>
+                </div>
+                
+                <div class="text-center space-y-4">
+                    <button id="ready-btn" class="retro-btn retro-btn-primary">Ready Up!</button>
+                    <button id="leave-room-btn" class="retro-btn retro-btn-secondary">Leave Room</button>
+                    <div id="start-timer" class="text-lg font-semibold text-blue-800 hidden"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Round -->
+        <div id="game-round" class="page hidden">
+            <div class="retro-card">
+                <div id="word-phase" class="phase">
+                    <h2 class="text-2xl font-bold text-blue-800 mb-4">Today's Word</h2>
+                    <div class="text-center">
+                        <div class="text-4xl font-bold text-purple-800 mb-2" id="current-word"></div>
+                        <div class="text-lg text-gray-600 mb-2" id="word-type"></div>
+                        <div class="text-base text-gray-700 mb-6" id="word-definition"></div>
+                    </div>
+                </div>
+                
+                <div id="writing-phase" class="phase hidden">
+                    <h3 class="text-xl font-semibold mb-4">Write your take (1 minute)</h3>
+                    <div class="mb-4">
+                        <div class="text-lg font-semibold text-red-600" id="writing-timer">60</div>
+                    </div>
+                    <textarea id="take-input" class="retro-input w-full h-32 mb-4" placeholder="Write your take using the word..."></textarea>
+                    <button id="submit-take-btn" class="retro-btn retro-btn-primary">Submit Take</button>
+                </div>
+                
+                <div id="voting-phase" class="phase hidden">
+                    <h3 class="text-xl font-semibold mb-4">Vote on Takes</h3>
+                    <div id="current-take" class="retro-card bg-white mb-6">
+                        <p class="text-lg mb-4" id="take-text"></p>
+                        <div class="flex justify-center gap-4">
+                            <button class="vote-btn retro-btn retro-btn-primary" data-vote="fire">🔥 Fire (+2)</button>
+                            <button class="vote-btn retro-btn retro-btn-secondary" data-vote="ok">👌 OK (+1)</button>
+                            <button class="vote-btn retro-btn retro-btn-accent" data-vote="bad">💩 Bad (0)</button>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-sm text-gray-600" id="voting-progress"></div>
+                    </div>
+                </div>
+                
+                <div id="results-phase" class="phase hidden">
+                    <h3 class="text-xl font-semibold mb-4">Round Results</h3>
+                    <div id="results-list" class="space-y-4 mb-6"></div>
+                    <div class="text-center">
+                        <button id="next-round-btn" class="retro-btn retro-btn-primary">Next Round</button>
+                        <button id="end-game-btn" class="retro-btn retro-btn-secondary ml-4">End Game</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Final Leaderboard -->
+        <div id="final-leaderboard" class="page hidden">
+            <div class="retro-card">
+                <h2 class="text-2xl font-bold text-blue-800 mb-6 text-center">Final Scores</h2>
+                <div id="final-scores" class="space-y-4 mb-6"></div>
+                <div class="text-center">
+                    <button id="new-game-btn" class="retro-btn retro-btn-primary">New Game</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="src/main.js"></script>
+</body>
 </html>
