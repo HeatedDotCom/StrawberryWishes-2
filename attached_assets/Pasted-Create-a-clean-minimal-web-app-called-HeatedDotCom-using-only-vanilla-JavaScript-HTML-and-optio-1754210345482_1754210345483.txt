@@ -1,0 +1,51 @@
+Create a clean, minimal web app called "HeatedDotCom" using only vanilla JavaScript, HTML, and optional Tailwind CSS (no TypeScript, no React, no .tsx, and no confusing Replit boilerplate).
+
+Folder structure:
+
+public/
+index.html (main game)
+style.css (or Tailwind if included)
+src/
+main.js (game logic)
+db.js (database functions)
+utils.js (helpers)
+supabase.js (handles auth + DB)
+Core concept:
+This is a real-time, blind-voting debate game. Each game room consists of up to 6 players. All players must click “Ready” to begin. The system picks a bold vocabulary word (like “hegemony” or “centrism”), and each player writes a take using that word.
+
+Once all takes are submitted:
+
+Takes are anonymized and shown one-by-one.
+Players vote “🔥” (great), “👌” (fair), or “💩” (bad).
+Users can't vote on their own take.
+Votes are tallied blindly.
+Scoring:
+
+🔥 = +2 points
+👌 = +1 point
+💩 = 0
+“Basedness” score increases with 🔥 votes over time.
+Features:
+
+Homepage: Join/Create room, pick topic field (e.g., politics, philosophy, social, random)
+Game lobby: Show joined players, ready status, start button (auto starts when all Ready)
+Round system: AI picks word (The meaning of the word should be shown and whether it is a verb, noun, adjective etc) → players write takes → voting phase → results revealed → leaderboard updates. Writing has a timer (1 minute)
+Basedness leaderboard: Top 10 users per field
+Profiles: Username, score, profile picture, basedness graph, takes history
+Auth: Login/signup via Supabase (email or anon mode)
+Media: Profile image optional (Supabase storage)
+Tech stack:
+
+Supabase for user auth, database (players, scores, takes, rooms), and optional media storage
+Vanilla JS (no frameworks)
+Tailwind CSS (optional, or use minimal custom CSS)
+No TypeScript, no JSX, no React, no .tsx files
+Extras (optional):
+
+skeumorphic 2000s retro windows 7 vibes sky blue buttons have depth, use frutiger font, clean cards, avoid flat designs, avoid modern designs
+Host leaderboard on /leaderboard.html
+Option to switch fields mid-game
+Room code sharing (join with code)
+This should be written in a modular, extendable way with clean code and zero bloat. Prioritize usability and clarity.
+Auth Supabase Auth
+AI mistralai/mistral-7b-instruct:free API openrouter:   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   (mistralai/mistral-7b-instruct:free for word generation and judging takes)   allow invite to room links    anon key for supabase:  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlsZnp3eHRya3hpaXRtbGR5c3NvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQyMDk0MzksImV4cCI6MjA2OTc4NTQzOX0.1ESXlg-d6O2yY2ogwQ7i9I4iGB3LFyIovV0Dlp4uuAw   service role key:  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlsZnp3eHRya3hpaXRtbGR5c3NvIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NDIwOTQzOSwiZXhwIjoyMDY5Nzg1NDM5fQ.k3hvTMlHNMXhqimrtnQmK0Y299V0R5FBAgde1LZL25I   project url:   https://ylfzwxtrkxiitmldysso.supabase.co    Database uri key:  postgresql://postgres:[YOUR-PASSWORD]@db.ylfzwxtrkxiitmldysso.supabase.co:5432/postgres    my database password: iLovePlasticGirl!88
