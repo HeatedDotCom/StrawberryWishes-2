@@ -23,7 +23,9 @@ class SupabaseClient {
             body: JSON.stringify({ 
                 email, 
                 password,
-                data: { username }
+                options: {
+                    data: { username }
+                }
             })
         });
         return await response.json();

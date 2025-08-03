@@ -32,40 +32,40 @@ class Leaderboard {
 
         if (data.length === 0) {
             leaderboardList.innerHTML = `
-                <div class="retro-card text-center text-gray-600">
-                    No players found for this field yet.
-                </div>
+                <tr>
+                    <td colspan="6" class="px-6 py-8 text-center text-gray-600">
+                        No players found for this field yet.
+                    </td>
+                </tr>
             `;
             return;
         }
 
         data.forEach((player, index) => {
-            const playerDiv = document.createElement('div');
-            playerDiv.className = 'retro-card bg-white';
+            const row = document.createElement('tr');
+            row.className = index % 2 === 0 ? 'bg-gray-50' : 'bg-white';
             
-            const rankEmoji = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `${index + 1}.`;
+            const rankEmoji = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '';
+            const rankText = rankEmoji || `#${index + 1}`;
             
-            playerDiv.innerHTML = `
-                <div class="flex justify-between items-center">
-                    <div class="flex items-center space-x-4">
-                        <span class="text-2xl">${rankEmoji}</span>
-                        <div>
-                            <div class="font-semibold text-lg">${player.player_id.replace('anon_', 'Anonymous_')}</div>
-                            <div class="text-sm text-gray-600">
-                                ${player.field} • ${player.games_played} games played
-                            </div>
-                        </div>
-                    </div>
-                    <div class="text-right">
-                        <div class="text-xl font-bold text-blue-600">${player.total_score}</div>
-                        <div class="text-sm text-gray-600">
-                            🔥 ${player.basedness_score} basedness
-                        </div>
-                    </div>
-                </div>
+            row.innerHTML = `
+                <td class="px-6 py-4 font-medium text-gray-900">
+                    <span class="text-lg">${rankText}</span>
+                </td>
+                <td class="px-6 py-4">
+                    <div class="font-semibold text-gray-900">${player.player_id.replace('anon_', 'Anonymous_')}</div>
+                </td>
+                <td class="px-6 py-4 text-gray-600 capitalize">${player.field}</td>
+                <td class="px-6 py-4 text-center font-bold text-blue-600 text-lg">${player.total_score}</td>
+                <td class="px-6 py-4 text-center">
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800">
+                        🔥 ${player.basedness_score}
+                    </span>
+                </td>
+                <td class="px-6 py-4 text-center text-gray-600">${player.games_played}</td>
             `;
             
-            leaderboardList.appendChild(playerDiv);
+            leaderboardList.appendChild(row);
         });
     }
 }

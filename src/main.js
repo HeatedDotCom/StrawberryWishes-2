@@ -146,8 +146,11 @@ class HeatedDotCom {
     showUserInfo() {
         document.getElementById('login-form').classList.add('hidden');
         document.getElementById('user-info').classList.remove('hidden');
-        document.getElementById('username').textContent = 
-            this.currentUser.username || this.currentUser.email || 'Anonymous';
+        const usernameElement = document.querySelector('#user-info #username');
+        if (usernameElement) {
+            usernameElement.textContent = 
+                this.currentUser.user_metadata?.username || this.currentUser.email || 'Anonymous';
+        }
     }
 
     showLoginForm() {
@@ -192,7 +195,7 @@ class HeatedDotCom {
             const room = await db.joinRoom(
                 roomCode, 
                 this.currentUser.id, 
-                this.currentUser.username || this.currentUser.email || 'Anonymous'
+                this.currentUser.user_metadata?.username || this.currentUser.email || 'Anonymous'
             );
 
             this.currentRoom = room;

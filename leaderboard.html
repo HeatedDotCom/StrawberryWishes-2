@@ -27,8 +27,22 @@
                 </select>
             </div>
             
-            <div id="leaderboard-list" class="space-y-4">
-                <!-- Leaderboard items will be populated here -->
+            <div class="overflow-x-auto">
+                <table class="w-full border-collapse bg-white rounded-lg overflow-hidden shadow-lg">
+                    <thead class="bg-blue-600 text-white">
+                        <tr>
+                            <th class="px-6 py-4 text-left font-semibold">Rank</th>
+                            <th class="px-6 py-4 text-left font-semibold">Player</th>
+                            <th class="px-6 py-4 text-left font-semibold">Field</th>
+                            <th class="px-6 py-4 text-center font-semibold">Total Score</th>
+                            <th class="px-6 py-4 text-center font-semibold">Basedness</th>
+                            <th class="px-6 py-4 text-center font-semibold">Games</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leaderboard-list">
+                        <!-- Leaderboard items will be populated here -->
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
