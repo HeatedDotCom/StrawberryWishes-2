@@ -155,6 +155,61 @@
     display: none !important;
 }
 
+.retro-table {
+    background: linear-gradient(145deg, #ffffff, #f0f8ff);
+    border: 2px solid #b0c4de;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 
+        0 4px 8px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.retro-table thead {
+    background: linear-gradient(145deg, #4a90e2, #357abd);
+    border-bottom: 2px solid #2e5c8a;
+}
+
+.retro-table th {
+    padding: 16px 24px;
+    color: white;
+    font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.retro-table th:last-child {
+    border-right: none;
+}
+
+.retro-table tbody tr {
+    border-bottom: 1px solid #e2e8f0;
+    transition: all 0.15s ease;
+}
+
+.retro-table tbody tr:nth-child(even) {
+    background: linear-gradient(145deg, #f8fafc, #f1f5f9);
+}
+
+.retro-table tbody tr:nth-child(odd) {
+    background: linear-gradient(145deg, #ffffff, #f8fafc);
+}
+
+.retro-table tbody tr:hover {
+    background: linear-gradient(145deg, #e6f3ff, #dbeafe);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.retro-table td {
+    padding: 16px 24px;
+    border-right: 1px solid rgba(226, 232, 240, 0.5);
+}
+
+.retro-table td:last-child {
+    border-right: none;
+}
+
 .take-result {
     background: linear-gradient(145deg, #ffffff, #f8fafc);
     border: 2px solid #e2e8f0;
