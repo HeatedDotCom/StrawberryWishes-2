@@ -16,11 +16,15 @@ class SupabaseClient {
         };
     }
 
-    async signUp(email, password) {
+    async signUp(email, password, username) {
         const response = await fetch(`${this.url}/auth/v1/signup`, {
             method: 'POST',
             headers: this.headers,
-            body: JSON.stringify({ email, password })
+            body: JSON.stringify({ 
+                email, 
+                password,
+                data: { username }
+            })
         });
         return await response.json();
     }

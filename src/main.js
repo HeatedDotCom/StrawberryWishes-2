@@ -38,6 +38,7 @@ class HeatedDotCom {
         // Room events
         document.getElementById('create-room-btn').addEventListener('click', () => this.createRoom());
         document.getElementById('join-room-btn').addEventListener('click', () => this.joinRoom());
+        document.getElementById('join-random-btn').addEventListener('click', () => this.joinRandomRoom());
         document.getElementById('leave-room-btn').addEventListener('click', () => this.leaveRoom());
         document.getElementById('copy-room-code').addEventListener('click', () => this.copyRoomCode());
 
@@ -61,6 +62,9 @@ class HeatedDotCom {
         document.getElementById('room-code').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') this.joinRoom();
         });
+
+        // Email overlay close button
+        document.getElementById('close-email-overlay').addEventListener('click', () => this.closeEmailOverlay());
     }
 
     // Authentication methods
@@ -88,21 +92,23 @@ class HeatedDotCom {
     }
 
     async handleSignup() {
+        const username = document.getElementById('username').value;
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
 
-        if (!email || !password) {
-            Utils.showNotification('Please fill in both fields', 'error');
+        if (!username || !email || !password) {
+            Utils.showNotification('Please fill in all fields', 'error');
             return;
         }
 
         try {
-            const result = await supabase.signUp(email, password);
+            const result = await supabase.signUp(email, password, username);
             if (result.error) {
                 Utils.showNotification(result.error.message, 'error');
             } else {
                 this.showEmailOverlay();
                 // Clear form
+                document.getElementById('username').value = '';
                 document.getElementById('email').value = '';
                 document.getElementById('password').value = '';
             }
@@ -196,6 +202,28 @@ class HeatedDotCom {
             Utils.showNotification('Joined room successfully!', 'success');
         } catch (error) {
             Utils.showNotification('Failed to join room: ' + error.message, 'error');
+        }
+    }
+
+    async joinRandomRoom() {
+        if (!this.currentUser) {
+            Utils.showNotification('Please login first', 'error');
+            return;
+        }
+
+        try {
+            const availableRooms = await db.getAvailableRooms();
+            
+            if (availableRooms.length === 0) {
+                Utils.showNotification('No available rooms found. Create one!', 'error');
+                return;
+            }
+
+            // Pick a random room
+            const randomRoom = availableRooms[Math.floor(Math.random() * availableRooms.length)];
+            await this.joinRoomByCode(randomRoom.code);
+        } catch (error) {
+            Utils.showNotification('Failed to join random room: ' + error.message, 'error');
         }
     }
 
